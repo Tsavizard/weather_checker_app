@@ -26,7 +26,7 @@ class Home extends React.Component {
           Cities: {this.props.cities}
         </div>
         <div>
-          {/* Temperature Fetch Path: {this.props.temperatureFetchPath} */}
+          {/* Temperature Fetch Path: {this.props.temperaturePath} */}
         </div>
       </React.Fragment>
     );
@@ -35,6 +35,6 @@ class Home extends React.Component {
 
 Home.propTypes = {
   cities: PropTypes.array,
-  temperatureFetchPath: PropTypes.string
+  temperaturePath: PropTypes.string
 };
 export default Home
