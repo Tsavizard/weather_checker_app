@@ -5,3 +5,16 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+[
+  { name:'Athens', is_included: false },
+  { name:'Berlin', is_included: false },
+  { name:'Dublin', is_included: false },
+  { name:'London', is_included: false },
+  { name:'Madrid', is_included: false },
+  { name:'Paris',  is_included: false }
+].each do |city|
+  WeatherChecker::City.find_or_create_by(name: city[:name]) do |c|
+    c.is_included = false
+  end
+end

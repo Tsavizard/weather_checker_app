@@ -1,11 +1,4 @@
 <%= react_component('Home', {
-  cities: [
-    { name:'Athens', is_included: false },
-    { name:'Berlin', is_included: false },
-    { name:'Dublin', is_included: false },
-    { name:'London', is_included: false },
-    { name:'Madrid', is_included: false },
-    { name:'Paris',  is_included: false }
-  ],
+  cities: City.all.map(&:as_json),
   temperaturePath: temperatures_path,
 }, prerender: true)%>
