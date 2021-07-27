@@ -7,16 +7,13 @@ class Home extends React.Component {
 
     this.state = {
       cities: this.props.cities,
+      loading: false,
       temperatures: []
     }
   }
 
   componentDidMount(){
     this.checkTemperatures()
-  }
-
-  checkTemperatures(){
-    //Fetch temperatures
   }
 
   // addCity(cityName) {
@@ -41,6 +38,16 @@ class Home extends React.Component {
     })
   }
 
+  checkTemperatures(cityName){
+    if(cityName){
+      //Fetch for city
+      this.setState({loading: true})
+    }
+    else{
+      //Fetch all
+    }
+  }
+
   render () {
     return (
       <table>
@@ -51,7 +58,15 @@ class Home extends React.Component {
             <td>Max</td>
             <td>Average</td>
             <td>Last Reading</td>
-            <td className='right'>Check All</td>
+            <td className='right'>
+              <button
+                onClick={() => {this.checkTemperatures(null)}}
+                type='button'
+                disabled={this.state.loading}
+              >
+                Update All
+              </button>
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -67,8 +82,9 @@ class Home extends React.Component {
                 <td>{last}</td>
                 <td className='right'>
                   <button
-                    onClick={() => console.log('hi')}
+                    onClick={() => {this.checkTemperatures(c.name)}}
                     type='button'
+                    disabled={this.state.loading}
                   >
                     Update temperature
                   </button>
