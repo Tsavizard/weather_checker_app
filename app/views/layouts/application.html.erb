@@ -5,11 +5,28 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
 
   <body>
-    <%= yield %>
+    <div class='row'>
+      <div class='col s12'>
+        <div class='welcome-header'>
+          <h3 >Welcome to Weather Checker</h3>
+        </div>
+    </div>
+    <div class='row'>
+      <div class='col s2'>
+        <ul>
+          <li>Add Cities</li>
+          <li>Remove Cities</li>
+        </ul>
+      </div>
+      <div class='col s8'>
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>

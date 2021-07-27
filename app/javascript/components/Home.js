@@ -43,30 +43,48 @@ class Home extends React.Component {
 
   render () {
     return (
-      <React.Fragment>
-        <div>
-          <h1>Welcome to Weather Checker</h1>
-        </div>
-
-        <div className='row'>
-          <span >Cities: </span>
+      <table>
+        <thead>
+          <tr>
+            <td>City</td>
+            <td>Min</td>
+            <td>Max</td>
+            <td>Average</td>
+            <td>Last Reading</td>
+            <td className='right'>Check All</td>
+          </tr>
+        </thead>
+        <tbody>
           {
-            this.state.cities.map((c,i) => {
-              return(
-                <div className='col s12' key={i}>
-                  { c.name }
-                  <AddRemoveCityButton
-                    city={c}
-                    clickHandler={() => { this.toggleCity(c.name)
-                      // c.is_included ? this.addCity(c.name) : this.removeCity(c.name)
-                    } }
-                />
-                </div>
-              )
-            })
-          }
-        </div>
-      </React.Fragment>
+          this.state.cities.map((c,i) => {
+            const {min, max, avg, last} = c.temperatures
+            return(
+              <tr key={i}>
+                <td>{c.name}</td>
+                <td>{min}</td>
+                <td>{max}</td>
+                <td>{avg}</td>
+                <td>{last}</td>
+                <td className='right'>
+                  <button
+                    onClick={() => console.log('hi')}
+                    type='button'
+                  >
+                    Update temperature
+                  </button>
+                </td>
+              </tr>
+            )
+          })
+        }
+        </tbody>
+      </table>
+      // <AddRemoveCityButton
+      //     city={c}
+      //     clickHandler={() => { this.toggleCity(c.name)
+      //       // c.is_included ? this.addCity(c.name) : this.removeCity(c.name)
+      //     } }
+      // />
     );
   }
 }
