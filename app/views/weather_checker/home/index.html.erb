@@ -1,4 +1,4 @@
 <%= react_component('Home', {
-  cities: City.all.map(&:as_json),
+  cities: WeatherChecker::City.all.map(&:as_json),
   temperaturePath: temperatures_path,
 }, prerender: true)%>
