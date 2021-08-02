@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import Cities from './Cities'
 
 class Home extends React.Component {
   constructor(props){
@@ -18,24 +19,29 @@ class Home extends React.Component {
 
   addCity(cityName) {
     fetch(this.props.cityPath, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
       method: 'POST',
       body: {
         city_name: cityName
       }
     })
-      .then(response => {
-        console.log(response)
-        return response.json()
-      })
-      .then(data => {
-        console.log(data)
-      });
+    .then(response => response.json())
+    .then(data => {
+      if(data.success) toggleCity(cityName)
+    });
   }
 
   removeCity(cityName) {
     fetch(`${this.props.cityPath}/${cityName}`, {
       method: 'DELETE'
     })
+    .then(response => response.json())
+    .then(data => {
+      if(data.success) toggleCity(cityName)
+    });
   }
 
   toggleCity(cityName) {
@@ -78,11 +84,12 @@ class Home extends React.Component {
   render () {
     return (
       <div className='row'>
+        <h6>Click a city to monitor</h6>
         <div className='col s2'>
-          <ul>
-            <li>Add Cities</li>
-            <li>Remove Cities</li>
-          </ul>
+          <Cities
+            cities = {this.state.cities.filter(c => !c.is_included)}
+            addCity={this.addCity.bind(this)}
+          />
         </div>
         <div className='col s10'>
           <table>
@@ -106,7 +113,7 @@ class Home extends React.Component {
             </thead>
             <tbody>
               {
-              this.state.cities.map((c,i) => {
+              this.state.cities.filter(c => c.is_included).map((c,i) => {
                 const {min, max, avg, last} = c.temperatures
                 return(
                   <tr key={i}>
@@ -115,6 +122,9 @@ class Home extends React.Component {
                     <td>{max}</td>
                     <td>{parseFloat(avg).toFixed(2)}</td>
                     <td>{last}</td>
+                    <td>
+                      <button type='button' onClick={() => {removeCity(c.name)}}>Remove </button>
+                    </td>
                   </tr>
                 )
               })
