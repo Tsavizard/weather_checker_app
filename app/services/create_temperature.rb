@@ -1,5 +1,6 @@
 class CreateTemperature
-  def self.call_for_city(city_names)
+
+  def self.call_for_cities(city_names)
     cities = WeatherChecker::City.included.where(name: city_names)
     checker_api = Api::TemperatureFetcher.new
 
