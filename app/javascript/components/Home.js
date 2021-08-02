@@ -7,24 +7,37 @@ class Home extends React.Component {
 
     this.state = {
       cities: this.props.cities,
-      loading: false,
-      temperatures: []
+
+      isLoading: false
     }
+    this.checkTemperatures = this.checkTemperatures.bind(this)
   }
 
   componentDidMount(){
     this.checkTemperatures()
   }
 
-  // addCity(cityName) {
-  //   //Update request for city. If success then call toggleCity
-  //   toggleCity(cityName)
-  // }
+  addCity(cityName) {
+    fetch(this.props.cityPath, {
+      method: 'POST',
+      body: {
+        city_name: cityName
+      }
+    })
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(data => {
+        console.log(data)
+      });
+  }
 
-  // removeCity(cityName) {
-  //   //Update request for city. If success then call toggleCity
-  //   toggleCity(cityName)
-  // }
+  removeCity(cityName) {
+    fetch(`${this.props.cityPath}/${cityName}`, {
+      method: 'DELETE'
+    })
+  }
 
   toggleCity(cityName) {
     this.setState(prevState => {
@@ -40,57 +53,66 @@ class Home extends React.Component {
 
   checkTemperatures(){
     this.setState({loading: true})
-    //Fetch all
-    fetch(this.props.temperaturePath)
+    const q = this.state.cities.map(c => c.name).join(',')
+    fetch(`${this.props.temperaturePath}?city_names=${q}`)
+      .then(response => {
+        console.log(response)
+        return response.json()
+      })
+      .then(data => {
+        console.log(data)
+      });
   }
 
   render () {
     return (
-      <table>
-        <thead>
-          <tr>
-            <td>City</td>
-            <td>Min</td>
-            <td>Max</td>
-            <td>Average</td>
-            <td>Last Reading</td>
-            <td className='right'>
-              <button
-                onClick={() => {this.checkTemperatures(null)}}
-                type='button'
-                disabled={this.state.loading}
-              >
-                Update All
-              </button>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          {
-          this.state.cities.map((c,i) => {
-            const {min, max, avg, last} = c.temperatures
-            return(
-              <tr key={i}>
-                <td>{c.name}</td>
-                <td>{min}</td>
-                <td>{max}</td>
-                <td>{avg}</td>
-                <td>{last}</td>
+      <div className='row'>
+        <div className='col s2'>
+          <ul>
+            <li>Add Cities</li>
+            <li>Remove Cities</li>
+          </ul>
+        </div>
+        <div className='col s10'>
+          <table>
+            <thead>
+              <tr>
+                <td>City</td>
+                <td>Min</td>
+                <td>Max</td>
+                <td>Average</td>
+                <td>Last Reading</td>
                 <td className='right'>
                   <button
-                    onClick={() => {this.checkTemperatures(c.name)}}
+                    onClick={this.checkTemperatures}
                     type='button'
-                    disabled={this.state.loading}
+                    disabled={this.state.isLoading}
                   >
-                    Update temperature
+                    Update All
                   </button>
                 </td>
               </tr>
-            )
-          })
-        }
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {
+              this.state.cities.map((c,i) => {
+                const {min, max, avg, last} = c.temperatures
+                return(
+                  <tr key={i}>
+                    <td>{c.name}</td>
+                    <td>{min}</td>
+                    <td>{max}</td>
+                    <td>{avg}</td>
+                    <td>{last}</td>
+                  </tr>
+                )
+              })
+            }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       // <AddRemoveCityButton
       //     city={c}
       //     clickHandler={() => { this.toggleCity(c.name)
