@@ -51,7 +51,7 @@ class Home extends React.Component {
   }
 
   checkTemperatures(){
-    this.setState({loading: true})
+    this.setState({isLoading: true})
     const q = this.state.cities.map(c => c.name).join(',')
     fetch(`${this.props.temperaturePath}?city_names=${q}`)
       .then(response => response.json())
@@ -67,7 +67,8 @@ class Home extends React.Component {
             cities[i].temperatures = {...cityObj[cityName]}
           })
           return({
-            cities: cities
+            cities: cities,
+            isLoading: false
           })
         })
       })
