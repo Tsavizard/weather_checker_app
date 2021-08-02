@@ -5,8 +5,13 @@ export default class Cities extends React.Component{
   render(){
     return(
       <ul>
-        <li>Add Cities</li>
-        <li>Remove Cities</li>
+        {
+          this.props.cities.map((c,i) => {
+            return(
+              <li key={i} onClick={() => this.props.addCity(c.name) }>{c.name}</li>
+            )
+          })
+        }
       </ul>
     )
   }
