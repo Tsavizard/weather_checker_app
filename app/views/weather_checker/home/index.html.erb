@@ -1,4 +1,5 @@
 <%= react_component('Home', {
+  cityPath: cities_path,
   cities: WeatherChecker::City.all.map{|city| WeatherChecker::CitySerializer.new(city).as_json},
-  temperaturePath: temperatures_path,
+  temperaturePath: temperatures_path
 }, prerender: true)%>
