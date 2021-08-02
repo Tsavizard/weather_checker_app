@@ -38,14 +38,10 @@ class Home extends React.Component {
     })
   }
 
-  checkTemperatures(cityName){
-    if(cityName){
-      //Fetch for city
-      this.setState({loading: true})
-    }
-    else{
-      //Fetch all
-    }
+  checkTemperatures(){
+    this.setState({loading: true})
+    //Fetch all
+    fetch(this.props.temperaturePath)
   }
 
   render () {
