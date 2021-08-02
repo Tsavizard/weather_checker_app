@@ -7,7 +7,6 @@ class Home extends React.Component {
 
     this.state = {
       cities: this.props.cities,
-
       isLoading: false
     }
     this.checkTemperatures = this.checkTemperatures.bind(this)
@@ -55,13 +54,23 @@ class Home extends React.Component {
     this.setState({loading: true})
     const q = this.state.cities.map(c => c.name).join(',')
     fetch(`${this.props.temperaturePath}?city_names=${q}`)
-      .then(response => {
-        console.log(response)
-        return response.json()
-      })
+      .then(response => response.json())
       .then(data => {
-        console.log(data)
-      });
+        if(!data.res) return
+
+        this.setState(prevState => {
+          const {cities} = prevState
+          data.res.forEach(cityObj => {
+            const cityName = Object.keys(cityObj)[0]
+            const i = cities.findIndex(city => city.name == cityName)
+
+            cities[i].temperatures = {...cityObj[cityName]}
+          })
+          return({
+            cities: cities
+          })
+        })
+      })
   }
 
   render () {
@@ -102,7 +111,7 @@ class Home extends React.Component {
                     <td>{c.name}</td>
                     <td>{min}</td>
                     <td>{max}</td>
-                    <td>{avg}</td>
+                    <td>{parseFloat(avg).toFixed(2)}</td>
                     <td>{last}</td>
                   </tr>
                 )
