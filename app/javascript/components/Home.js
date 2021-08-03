@@ -14,10 +14,6 @@ class Home extends React.Component {
     this.checkTemperatures = this.checkTemperatures.bind(this)
   }
 
-  componentDidMount(){
-    this.checkTemperatures()
-  }
-
   addCity(cityName) {
     this.setLoading(true)
     const fd = new FormData
@@ -31,7 +27,6 @@ class Home extends React.Component {
       success: res => {
         if(res.success) this.toggleCity(cityName)
       },
-      error: res => { },
       complete: res => {
         this.setLoading(false)
       }
@@ -47,7 +42,6 @@ class Home extends React.Component {
       success: res => {
         if(res.success) this.toggleCity(cityName)
       },
-      error: res => { },
       complete: res => {
         this.setLoading(false)
       }
@@ -68,11 +62,13 @@ class Home extends React.Component {
 
   checkTemperatures(){
     this.setState({isLoading: true})
-
     const q = this.state.cities.map(c => c.name).join(',')
-    fetch(`${this.props.temperaturePath}?city_names=${q}`)
-      .then(response => response.json())
-      .then(data => {
+
+    Rails.ajax({
+      type: 'GET',
+      url: `${this.props.temperaturePath}?city_names=${q}`,
+      dataType: 'json',
+      success: data => {
         if(!data.res) return
 
         this.setState(prevState => {
@@ -88,15 +84,12 @@ class Home extends React.Component {
             isLoading: false
           })
         })
-      })
+      }
+    })
   }
 
   setLoading(loading){
-    if(loading){
-      document.body.style.cursor='wait';
-    }else{
-      document.body.style.cursor='default';
-    }
+    document.body.style.cursor = loading ? 'wait' : 'default'
     this.setState({isLoading: loading})
   }
 
@@ -109,7 +102,7 @@ class Home extends React.Component {
           <td>{c.name}</td>
           <td>{min}</td>
           <td>{max}</td>
-          <td>{parseFloat(avg).toFixed(2) || '-'}</td>
+          <td>{Number.isNaN(parseFloat(avg)) ? '-' : parseFloat(avg).toFixed(2)}</td>
           <td>{last}</td>
           <td>
             <button
