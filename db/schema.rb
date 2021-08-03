@@ -12,14 +12,14 @@
 
 ActiveRecord::Schema.define(version: 2021_07_21_160104) do
 
-  create_table "cities", force: :cascade do |t|
+  create_table "cities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.string "name"
     t.boolean "is_included"
   end
 
-  create_table "temperatures", force: :cascade do |t|
+  create_table "temperatures", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.decimal "value", precision: 5, scale: 2
-    t.integer "city_id", null: false
+    t.bigint "city_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["city_id"], name: "index_temperatures_on_city_id"
