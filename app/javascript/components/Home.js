@@ -136,40 +136,39 @@ class Home extends React.Component {
           }
         </div>
         <div className='col s10'>
-          <table>
-            <thead>
-              <tr>
-                <td>City</td>
-                <td>Min</td>
-                <td>Max</td>
-                <td>Average</td>
-                <td>Last</td>
-                <td className='right'>
-                  <button
-                    onClick={this.checkTemperatures}
-                    type='button'
-                    disabled={this.state.isLoading}
-                  >
-                    Update All
-                  </button>
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                rows.length > 0 ? rows : 'To monitor the temperature of a city please select it from the menu to the left'
-              }
-            </tbody>
-          </table>
+          { rows.length > 0 ?
+            <table>
+              <thead>
+                <tr>
+                  <td>City</td>
+                  <td>Min</td>
+                  <td>Max</td>
+                  <td>Average</td>
+                  <td>Last</td>
+                  <td className='right'>
+                    <button
+                      onClick={this.checkTemperatures}
+                      type='button'
+                      disabled={this.state.isLoading}
+                    >
+                      Update All
+                    </button>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                { rows }
+              </tbody>
+            </table>
+          :
+            <h6
+              style={{textAlign: 'center'}}
+            >
+              To monitor the temperature of a city please select it from the menu to the left
+            </h6>
+        }
         </div>
       </div>
-
-      // <AddRemoveCityButton
-      //     city={c}
-      //     clickHandler={() => { this.toggleCity(c.name)
-      //       // c.is_included ? this.addCity(c.name) : this.removeCity(c.name)
-      //     } }
-      // />
     );
   }
 }
@@ -178,12 +177,5 @@ Home.propTypes = {
   cities: PropTypes.array,
   temperaturePath: PropTypes.string
 };
-
-function AddRemoveCityButton({city, clickHandler}) {
-  const sign = city.is_included ? '-' : '+'
-  return(
-    <button type='button' onClick={clickHandler}>{sign}</button>
-  )
-}
 
 export default Home
