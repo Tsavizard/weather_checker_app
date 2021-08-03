@@ -126,7 +126,7 @@ class Home extends React.Component {
 
     return (
       <div className='row'>
-        <div className='col s2' style={{borderRight: '1px solid black', justifyContent: 'center'}}>
+        <div className='col s2' style={{borderRight: '1px solid black'}}>
           {excludedCities.length > 0 &&
             <Cities
               addCity={this.addCity.bind(this)}

@@ -1,11 +1,17 @@
 import React from 'react'
 
 export default function Cities({isLoading, cities, addCity}){
+  const citiesListStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end'
+  }
+
   if(isLoading){
     return(
       <React.Fragment>
         <h6 style={{textAlign: 'center'}}>Click a city to monitor</h6>
-        <ul>
+        <ul style={citiesListStyles}>
         {
           cities.map((c,i) => {
             return(<li key={i}> {c.name} </li>)
@@ -19,7 +25,7 @@ export default function Cities({isLoading, cities, addCity}){
   return(
     <React.Fragment>
       <h6 style={{textAlign: 'center'}}>Click a city to monitor</h6>
-      <ul>
+      <ul style={citiesListStyles}>
         {
           cities.map((c,i) => {
             return(
