@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Cities from './Cities'
+import Rails from '@rails/ujs'
 
 class Home extends React.Component {
   constructor(props){
@@ -18,20 +19,25 @@ class Home extends React.Component {
   }
 
   addCity(cityName) {
-    fetch(this.props.cityPath, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      method: 'POST',
-      body: {
+    this.setState({isLoading: true})
+
+    Rails.ajax({
+      type: 'POST',
+      url: this.props.cityPath,
+      dataType: 'json',
+      data: JSON.stringify({
         city_name: cityName
+      }),
+      success: res => {
+        if(data.success) toggleCity(cityName)
+      },
+      error: res => {
+
+      },
+      complete: res => {
+        this.setState({isLoading: false})
       }
     })
-    .then(response => response.json())
-    .then(data => {
-      if(data.success) toggleCity(cityName)
-    });
   }
 
   removeCity(cityName) {
@@ -87,8 +93,9 @@ class Home extends React.Component {
         <h6>Click a city to monitor</h6>
         <div className='col s2'>
           <Cities
-            cities = {this.state.cities.filter(c => !c.is_included)}
             addCity={this.addCity.bind(this)}
+            cities = {this.state.cities.filter(c => !c.is_included)}
+            isLoading={this.state.isLoading}
           />
         </div>
         <div className='col s10'>

@@ -8,7 +8,7 @@ export default class Cities extends React.Component{
         {
           this.props.cities.map((c,i) => {
             return(
-              <li key={i} onClick={() => this.props.addCity(c.name) }>{c.name}</li>
+              <li key={i} onClick={() => !this.props.isLoading && this.props.addCity(c.name) }>{c.name}</li>
             )
           })
         }

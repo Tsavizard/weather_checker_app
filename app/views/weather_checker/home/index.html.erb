@@ -2,4 +2,4 @@
   cityPath: cities_path,
   cities: WeatherChecker::City.all.map{|city| WeatherChecker::CitySerializer.new(city).as_json},
   temperaturePath: temperatures_path,
-}, prerender: true)%>
+})%>
