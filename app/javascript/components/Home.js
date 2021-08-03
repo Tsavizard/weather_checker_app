@@ -29,7 +29,7 @@ class Home extends React.Component {
         city_name: cityName
       }),
       success: res => {
-        if(data.success) toggleCity(cityName)
+        if(res.success) toggleCity(cityName)
       },
       error: res => {
 
