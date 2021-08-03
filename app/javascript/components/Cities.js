@@ -1,18 +1,39 @@
 import React from 'react'
 
-export default class Cities extends React.Component{
-
-  render(){
+export default function Cities({isLoading, cities, addCity}){
+  if(isLoading){
     return(
+      <React.Fragment>
+        <h6 style={{textAlign: 'center'}}>Click a city to monitor</h6>
+        <ul>
+        {
+          cities.map((c,i) => {
+            return(<li key={i}> {c.name} </li>)
+          })
+        }
+        </ul>
+      </React.Fragment>
+    )
+  }
+
+  return(
+    <React.Fragment>
+      <h6 style={{textAlign: 'center'}}>Click a city to monitor</h6>
       <ul>
         {
-          this.props.cities.map((c,i) => {
+          cities.map((c,i) => {
             return(
-              <li key={i} onClick={() => !this.props.isLoading && this.props.addCity(c.name) }>{c.name}</li>
+              <li
+                key={i}
+                onClick={() => addCity(c.name) }
+                style={{cursor: 'pointer'}}
+              >
+                {c.name}
+              </li>
             )
           })
         }
       </ul>
-    )
-  }
+    </React.Fragment>
+  )
 }

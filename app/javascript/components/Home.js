@@ -19,35 +19,39 @@ class Home extends React.Component {
   }
 
   addCity(cityName) {
-    this.setState({isLoading: true})
+    this.setLoading(true)
+    const fd = new FormData
+    fd.append('city_name', cityName)
 
     Rails.ajax({
       type: 'POST',
       url: this.props.cityPath,
       dataType: 'json',
-      data: JSON.stringify({
-        city_name: cityName
-      }),
+      data: fd,
       success: res => {
-        if(res.success) toggleCity(cityName)
+        if(res.success) this.toggleCity(cityName)
       },
-      error: res => {
-
-      },
+      error: res => { },
       complete: res => {
-        this.setState({isLoading: false})
+        this.setLoading(false)
       }
     })
   }
 
   removeCity(cityName) {
-    fetch(`${this.props.cityPath}/${cityName}`, {
-      method: 'DELETE'
+    this.setLoading(true)
+    Rails.ajax({
+      type: 'DELETE',
+      url: `${this.props.cityPath}/${cityName}`,
+      dataType: 'json',
+      success: res => {
+        if(res.success) this.toggleCity(cityName)
+      },
+      error: res => { },
+      complete: res => {
+        this.setLoading(false)
+      }
     })
-    .then(response => response.json())
-    .then(data => {
-      if(data.success) toggleCity(cityName)
-    });
   }
 
   toggleCity(cityName) {
@@ -87,16 +91,49 @@ class Home extends React.Component {
       })
   }
 
+  setLoading(loading){
+    if(loading){
+      document.body.style.cursor='wait';
+    }else{
+      document.body.style.cursor='default';
+    }
+    this.setState({isLoading: loading})
+  }
+
   render () {
+    const excludedCities = this.state.cities.filter(c => !c.is_included)
+    const rows = this.state.cities.filter(c => c.is_included).map((c,i) => {
+      const {min, max, avg, last} = c.temperatures
+      return(
+        <tr key={i}>
+          <td>{c.name}</td>
+          <td>{min}</td>
+          <td>{max}</td>
+          <td>{parseFloat(avg).toFixed(2) || '-'}</td>
+          <td>{last}</td>
+          <td>
+            <button
+              type='button'
+              onClick={() => {this.removeCity(c.name)}}
+              disabled={this.state.isLoading}
+            >
+                Remove
+            </button>
+          </td>
+        </tr>
+      )
+    })
+
     return (
       <div className='row'>
-        <h6>Click a city to monitor</h6>
-        <div className='col s2'>
-          <Cities
-            addCity={this.addCity.bind(this)}
-            cities = {this.state.cities.filter(c => !c.is_included)}
-            isLoading={this.state.isLoading}
-          />
+        <div className='col s2' style={{borderRight: '1px solid black', justifyContent: 'center'}}>
+          {excludedCities.length > 0 &&
+            <Cities
+              addCity={this.addCity.bind(this)}
+              cities = {excludedCities}
+              isLoading={this.state.isLoading}
+            />
+          }
         </div>
         <div className='col s10'>
           <table>
@@ -106,7 +143,7 @@ class Home extends React.Component {
                 <td>Min</td>
                 <td>Max</td>
                 <td>Average</td>
-                <td>Last Reading</td>
+                <td>Last</td>
                 <td className='right'>
                   <button
                     onClick={this.checkTemperatures}
@@ -120,22 +157,8 @@ class Home extends React.Component {
             </thead>
             <tbody>
               {
-              this.state.cities.filter(c => c.is_included).map((c,i) => {
-                const {min, max, avg, last} = c.temperatures
-                return(
-                  <tr key={i}>
-                    <td>{c.name}</td>
-                    <td>{min}</td>
-                    <td>{max}</td>
-                    <td>{parseFloat(avg).toFixed(2)}</td>
-                    <td>{last}</td>
-                    <td>
-                      <button type='button' onClick={() => {removeCity(c.name)}}>Remove </button>
-                    </td>
-                  </tr>
-                )
-              })
-            }
+                rows.length > 0 ? rows : 'To monitor the temperature of a city please select it from the menu to the left'
+              }
             </tbody>
           </table>
         </div>
