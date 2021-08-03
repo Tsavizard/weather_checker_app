@@ -1,7 +1,7 @@
 module WeatherChecker
   class CitiesController < ApplicationController
     def create
-      city = WeatherChecker::City.excluded.find_by(name: params[:city_name])
+      city = WeatherChecker::City.excluded_only.find_by(name: params[:city_name])
 
       respond_to do |format|
         format.json do
@@ -15,7 +15,7 @@ module WeatherChecker
     end
 
     def destroy
-      city = WeatherChecker::City.included.find_by(name: params[:city_name])
+      city = WeatherChecker::City.included_only.find_by(name: params[:city_name])
 
       respond_to do |format|
         format.json do
